@@ -132,6 +132,12 @@ const Home = () => (
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
+
+              {/* ✅ Added: About me CTA (inserted between existing CTAs) */}
+              <Button variant="outline" size="lg" asChild className="font-display text-base">
+                <Link to="/about">About me</Link>
+              </Button>
+
               <Button variant="outline" size="lg" asChild className="font-display text-base">
                 <Link to="/contact">Start a Project</Link>
               </Button>
@@ -176,6 +182,20 @@ const Home = () => (
       </button>
     </section>
 
+    {/* ✅ Added: Personal intro strip (immediately below hero) */}
+    <section className="mt-12 px-4">
+      <div className="max-w-4xl mx-auto text-center space-y-4">
+        <p className="text-sm text-muted-foreground">Behind the systems you see…</p>
+        <p className="text-lg font-medium">
+          I’m the engineer behind PinessTech Studio. I don’t just build websites — I design the
+          systems, logic, and infrastructure that make them fast, scalable, and reliable.
+        </p>
+        <Link to="/about" className="text-primary font-medium hover:underline">
+          Learn more about me →
+        </Link>
+      </div>
+    </section>
+
     {/* ─── What I Build ─── */}
     <section id="what-i-build" className="py-24 md:py-32 relative">
       <div className="absolute inset-0 bg-gradient-section" />
@@ -213,19 +233,14 @@ const Home = () => (
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {serviceSummary.map((s) => (
-              <div
-                key={s.title}
-                className="group glass glass-hover rounded-xl p-5 space-y-3"
-              >
+              <div key={s.title} className="group glass glass-hover rounded-xl p-5 space-y-3">
                 <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
                   <s.icon className="w-4 h-4" />
                 </div>
                 <h3 className="font-display text-sm font-semibold text-foreground">
                   {s.title}
                 </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {s.desc}
-                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -260,10 +275,7 @@ const Home = () => (
 
           <div className="grid md:grid-cols-3 gap-6">
             {featuredProjects.map((p) => (
-              <div
-                key={p.title}
-                className="group glass glass-hover rounded-xl p-6 space-y-4"
-              >
+              <div key={p.title} className="group glass glass-hover rounded-xl p-6 space-y-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
                   <p.icon className="w-5 h-5" />
                 </div>
