@@ -184,13 +184,12 @@ const Home = () => (
 
     {/* ✅ Added: Personal intro strip (immediately below hero) */}
     <section className="mt-12 px-4">
-      <div className="max-w-4xl mx-auto text-center space-y-4"
-        <Link to="/about" className="text-primary font-medium hover:underline">
-          Learn more about me →
-        </Link>
-      </div>
-    </section>
-
+  <div className="max-w-4xl mx-auto text-center space-y-4">
+    <Link to="/about" className="text-primary font-medium hover:underline">
+      Learn more about me →
+    </Link>
+  </div>
+</section>
     {/* ─── What I Build ─── */}
     <section id="what-i-build" className="py-24 md:py-32 relative">
       <div className="absolute inset-0 bg-gradient-section" />
