@@ -185,11 +185,8 @@ const Home = () => (
     {/* ✅ Added: Personal intro strip (immediately below hero) */}
     <section className="mt-12 px-4">
       <div className="max-w-4xl mx-auto text-center space-y-4">
-        <p className="text-sm text-muted-foreground">Behind the systems you see…</p>
-        <p className="text-lg font-medium">
-          I’m the engineer behind PinessTech Studio. I don’t just build websites — I design the
-          systems, logic, and infrastructure that make them fast, scalable, and reliable.
-        </p>
+        
+        
         <Link to="/about" className="text-primary font-medium hover:underline">
           Learn more about me →
         </Link>
