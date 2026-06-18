@@ -1,98 +1,125 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Services", href: "/services" },
-  { label: "Projects", href: "/projects" },
-  { label: "Mentorship", href: "/mentorship" },
+  { label: "About", id: "about" },
+  { label: "Projects", id: "projects" },
+  { label: "Skills", id: "skills" },
+  { label: "Studio", id: "pinesstech" },
+  { label: "Contact", id: "contact" },
 ];
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeId, setActiveId] = useState<string>("");
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handler);
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+      // scrollspy
+      const ids = navLinks.map((l) => l.id);
+      let current = "";
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 120) current = id;
+      }
+      setActiveId(current);
+    };
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [location.pathname]);
 
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
 
+  const goTo = (id: string) => {
+    if (location.pathname !== "/") {
+      navigate(`/#${id}`);
+      return;
+    }
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "glass py-3" : "py-5 bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+        scrolled
+          ? "bg-background/85 backdrop-blur-md border-b border-border"
+          : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between">
-        <Link to="/" className="font-display text-xl font-bold tracking-tight">
-          <span className="text-gradient">Piness</span>
-          <span className="text-foreground">Tech</span>
+      <div className="max-w-[1100px] mx-auto px-6 h-16 flex items-center justify-between">
+        <Link to="/" className="font-mono text-sm font-semibold tracking-tight">
+          <span className="text-primary">happiness</span>
+          <span className="text-foreground">.adam</span>
         </Link>
 
         {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className={`text-sm transition-colors relative group ${
-                location.pathname === link.href
-                  ? "text-foreground"
+            <button
+              key={link.id}
+              onClick={() => goTo(link.id)}
+              className={`text-sm transition-colors ${
+                activeId === link.id
+                  ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {link.label}
-              <span
-                className={`absolute -bottom-1 left-0 h-px bg-primary transition-all duration-300 ${
-                  location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
-                }`}
-              />
-            </Link>
+            </button>
           ))}
-          <Button size="sm" asChild className="font-display">
-            <Link to="/contact">Start a Project</Link>
-          </Button>
+          <a
+            href="https://github.com/Pinness"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-mono px-3 py-1.5 rounded-md border border-border hover:border-primary hover:text-primary transition-colors"
+          >
+            GitHub ↗
+          </a>
         </div>
 
-        {/* Mobile toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
+        <button
+          className="md:hidden text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle menu"
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </Button>
+        </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="md:hidden glass mt-2 mx-4 rounded-lg p-4 space-y-3 animate-scale-in">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className={`block w-full text-left text-sm py-2 px-3 rounded-md transition-colors ${
-                location.pathname === link.href
-                  ? "text-foreground bg-muted"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
+        <div className="md:hidden bg-background border-t border-border">
+          <div className="px-6 py-4 flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => goTo(link.id)}
+                className={`text-left text-sm py-2.5 px-3 rounded-md transition-colors ${
+                  activeId === link.id
+                    ? "text-primary bg-secondary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
+            <a
+              href="https://github.com/Pinness"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-mono py-2.5 px-3 mt-2 rounded-md border border-border text-foreground"
             >
-              {link.label}
-            </Link>
-          ))}
-          <Button size="sm" className="w-full font-display" asChild>
-            <Link to="/contact">Start a Project</Link>
-          </Button>
+              GitHub ↗
+            </a>
+          </div>
         </div>
       )}
     </nav>
