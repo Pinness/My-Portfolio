@@ -1,389 +1,582 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import PageLayout from "@/components/PageLayout";
+import TerminalCard from "@/components/TerminalCard";
 import { Button } from "@/components/ui/button";
-import avatarImg from "@/assets/1752184730238.jpg";
 import {
   ArrowRight,
-  ChevronDown,
-  Globe,
-  Layout,
-  Server,
-  Rocket,
-  Target,
-  Youtube,
-  MessageCircle,
   Github,
-  Shield,
-  Heart,
+  Linkedin,
+  Twitter,
+  ExternalLink,
+  Mail,
 } from "lucide-react";
-import PageLayout from "@/components/PageLayout";
 
-const featuredProjects = [
+/* ─────────────────────────  DATA  ───────────────────────── */
+
+const projects = [
   {
-    title: "Dexgen Engineering Solutions",
-    subtitle: "Full-Stack Business Platform",
+    tag: "Full-Stack · NGO Client · Live",
+    title: "Eagle's Wings Empowerment Platform",
     description:
-      "A complete digital platform for an engineering services company — professional web presence with CMS, admin auth, and SEO optimization.",
-    tech: ["React", "TypeScript", "Supabase", "Vercel"],
-    icon: Globe,
+      "Production platform for a cross-border humanitarian organization operating between Nigeria and Europe. Architected the complete backend from scratch on a stateless frontend — a 24-table headless CMS schema, 8 Supabase Edge Functions, role-based access control across 3 permission levels, and a Paystack donation pipeline. Zero custom server — all backend logic runs serverless.",
+    stack: [
+      "React 19",
+      "TypeScript",
+      "Vite 7",
+      "Supabase",
+      "PostgreSQL",
+      "Edge Functions",
+      "RLS",
+      "Paystack",
+      "Vercel",
+    ],
+    live: "https://eagleswing.vercel.app",
+    repo: "https://github.com/Pinness/eagle-s-wings-bridge",
+    liveBadge: true,
   },
   {
-    title: "HealthQuest",
-    subtitle: "Interactive Public Health Quiz Platform",
+    tag: "Backend · API · Security",
+    title: "Async JWT Authentication Service",
     description:
-      "Gamified HIV and public health education — dynamic quiz engine with progress tracking, scoring, and achievement systems.",
-    tech: ["Python", "Flask", "MySQL", "SQLAlchemy"],
-    icon: Heart,
+      "A microservice-ready, asynchronous user authentication backend built with FastAPI and MySQL. Implements the full auth lifecycle — secure registration with duplicate checks, bcrypt password hashing, JWT access and refresh token issuance, and Alembic-managed database migrations. Designed to be consumed by frontend apps or other microservices as a standalone identity layer.",
+    stack: [
+      "FastAPI",
+      "Python",
+      "MySQL",
+      "SQLModel",
+      "asyncmy",
+      "JWT",
+      "bcrypt",
+      "Alembic",
+      "Pydantic",
+    ],
+    repo: "https://github.com/Pinness/UserAuthentication_fastapi",
+    note: "Async-first architecture · Swagger UI docs included · Production security practices",
   },
   {
-    title: "AI Character Conversation Platform",
-    subtitle: "FastAPI AI Backend Architecture",
+    tag: "Frontend · Commercial Client",
+    title: "Dexgen Electricals — Business Web Platform",
     description:
-      "A pure API backend for AI-powered character conversations — clean service composition with LLM stub mode for offline development.",
-    tech: ["Python", "FastAPI", "Pydantic", "Groq API"],
-    icon: MessageCircle,
+      "Commercial website for an electrical services business. Designed and built the complete frontend to establish the company's digital presence, communicate services clearly, and convert visitors to leads. A real client deliverable — not a demo project.",
+    stack: ["HTML", "CSS", "JavaScript", "Responsive Design"],
+    repo: "https://github.com/Pinness/DexgenElectricals_frontend",
+    note: "Client deployment",
+  },
+  {
+    tag: "Full-Stack · Public Health · Social Impact",
+    title: "Health Quest — HIV Education Quiz Platform",
+    description:
+      "An interactive web application built to educate users on HIV through quiz-based learning across 5 categories: Basics, Transmission, Prevention, Treatment, and Community Services. Built with a Flask backend, MySQL database, and server-rendered templates. A project built for public health impact — not just to demonstrate technical skill.",
+    stack: ["Python", "Flask", "MySQL", "SQLAlchemy", "HTML", "CSS", "SCSS"],
+    repo: "https://github.com/Pinness/Health_Quest",
+  },
+  {
+    tag: "Backend · Open Source · Collaboration",
+    title: "jechspace — Booking System Module",
+    description:
+      "Contributed the booking system module to jechspace — an open-source project built by a development team. Designed and implemented the reservation flow, backend booking endpoints, and availability logic within an existing codebase. Demonstrates the ability to onboard into unfamiliar code, collaborate with other engineers, and deliver a specific, scoped feature end-to-end.",
+    stack: ["Python", "REST APIs", "Booking Logic", "Git Collaboration"],
+    repo: "https://github.com/jechspace",
+    note: "Team contribution · Feature ownership within collaborative codebase",
   },
 ];
 
-const serviceSummary = [
+const skillGroups = [
   {
-    icon: Globe,
-    title: "Modern Websites",
-    desc: "High-performance business websites and responsive platforms",
+    label: "Languages",
+    items: ["Python", "TypeScript", "JavaScript", "SQL", "HTML", "CSS"],
   },
   {
-    icon: Layout,
-    title: "Web Applications",
-    desc: "Dashboards, SaaS platforms, and custom digital tools",
+    label: "Backend",
+    items: ["FastAPI", "Django", "Flask", "Node.js", "REST APIs", "JWT Auth"],
   },
   {
-    icon: Server,
-    title: "Backend Systems",
-    desc: "Secure APIs, authentication architecture, and scalable backends",
+    label: "Frontend",
+    items: ["React", "Vite", "Tailwind CSS", "Next.js basics", "SCSS"],
   },
   {
-    icon: Target,
-    title: "Landing Pages",
-    desc: "High-conversion pages for product launches and campaigns",
+    label: "Databases",
+    items: ["PostgreSQL", "MySQL", "Supabase", "SQLModel", "SQLAlchemy", "Alembic"],
   },
   {
-    icon: Rocket,
-    title: "Startup MVPs",
-    desc: "Rapid product development with production-grade architecture",
+    label: "Infra & DevOps",
+    items: ["Vercel", "Supabase Edge Functions", "RLS", "Git", "GitHub Actions"],
   },
   {
-    icon: Shield,
-    title: "Security & Auth",
-    desc: "Authentication systems, encryption, and data protection",
+    label: "Practice",
+    items: [
+      "System design",
+      "Auth architecture",
+      "API security",
+      "Code reviews",
+      "Mentorship",
+    ],
   },
 ];
 
-const Home = () => (
-  <PageLayout>
-    {/* ─── Hero ─── */}
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-primary/5 blur-3xl animate-float" />
-      <div
-        className="absolute bottom-1/4 -right-32 w-80 h-80 rounded-full bg-primary/3 blur-3xl animate-float"
-        style={{ animationDelay: "3s" }}
-      />
-      <div
-        className="absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage:
-            "linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
+const quickFacts = [
+  { k: "Role", v: "Full-Stack Software Engineer" },
+  { k: "Studio", v: "Founder, PinessTech" },
+  { k: "Background", v: "Economics → Software Engineering" },
+  { k: "Focus", v: "Backend systems & web platforms" },
+  { k: "Availability", v: "Freelance · Contract · Full-time" },
+  { k: "Based in", v: "Nigeria · Remote-first" },
+];
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          {/* Text */}
-          <div className="flex-1 text-center lg:text-left space-y-8">
-            <p className="text-sm font-display text-primary tracking-widest uppercase animate-fade-in">
-              PinessTech Studio
+/* ─────────────────────────  PAGE  ───────────────────────── */
+
+const Home = () => {
+  const location = useLocation();
+
+  // Honor /#section navigation from other routes
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.slice(1);
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }, 50);
+    }
+  }, [location]);
+
+  return (
+    <PageLayout>
+      {/* ─── HERO ─── */}
+      <section className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden">
+        <div className="absolute inset-0 dot-grid opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
+        <div className="relative max-w-[1100px] w-full mx-auto px-6 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left */}
+          <div className="space-y-7">
+            <p className="section-eyebrow">
+              <span className="text-success">●</span> Available for work
             </p>
-
-            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight animate-fade-in">
-              I Build Backend Systems That Scale
-              <br />
-              and Frontend Experiences
-              <br />
-              <span className="text-gradient">That Sell</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold leading-[1.05] tracking-tight">
+              Happiness Adam
             </h1>
-
-            <p
-              className="text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed animate-fade-in"
-              style={{ animationDelay: "0.2s", opacity: 0 }}
-            >
-              You focus on the vision; I'll handle the engineering. From secure
-              backend architecture to seamless frontend interfaces, I build
-              high-performance websites and digital products that scale with
-              your business.
+            <p className="text-lg sm:text-xl text-foreground/90 font-medium">
+              Full-Stack Software Engineer{" "}
+              <span className="text-muted-foreground">&</span> Backend Systems
+              Builder
             </p>
-
-            <div
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in"
-              style={{ animationDelay: "0.4s", opacity: 0 }}
-            >
-              <Button size="lg" asChild className="font-display text-base gap-2 group">
-                <Link to="/projects">
-                  View My Work
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild className="font-display text-base">
-                <Link to="/contact">Start a Project</Link>
-              </Button>
+            <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
+              I build production-grade systems — not just websites. Backend
+              architectures, authentication services, and full-stack platforms
+              for real organizations and real users.
+            </p>
+            <div className="flex flex-wrap gap-3 pt-2">
               <Button
-                variant="ghost"
                 size="lg"
                 onClick={() =>
-                  window.open(
-                    "https://chat.whatsapp.com/L8k7rTVTky66Bzev3KjVK0?mode=gi_t",
-                    "_blank"
-                  )
+                  document
+                    .getElementById("projects")
+                    ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="font-display text-base text-primary hover:text-primary"
+                className="gap-2 group"
               >
-                Join the Mentorship Community
+                See selected work
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() =>
+                  document
+                    .getElementById("contact")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+              >
+                Get in touch
               </Button>
             </div>
-          </div>
-
-          {/* Hero Image */}
-          <div className="shrink-0 animate-fade-in" style={{ animationDelay: "0.3s", opacity: 0 }}>
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-accent rounded-2xl opacity-20 blur group-hover:opacity-30 transition-opacity duration-500" />
-              <img
-                src={avatarImg}
-                alt="Happiness Adam – Founder of PinessTech Studio"
-                className="relative w-64 h-72 sm:w-72 sm:h-80 lg:w-[420px] lg:h-[480px] rounded-2xl object-cover shadow-card"
-                loading="eager"
-              />
+            <div className="flex items-center gap-5 pt-3 text-muted-foreground">
+              <a
+                href="https://github.com/Pinness"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="hover:text-primary transition-colors"
+              >
+                <Github className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/pinessjw-adam"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="hover:text-primary transition-colors"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a
+                href="https://x.com/LadyPiness"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X / Twitter"
+                className="hover:text-primary transition-colors"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
             </div>
           </div>
+
+          {/* Right: terminal */}
+          <div className="flex justify-center lg:justify-end">
+            <TerminalCard />
+          </div>
         </div>
-      </div>
+      </section>
 
-      <button
-        onClick={() =>
-          document.getElementById("what-i-build")?.scrollIntoView({ behavior: "smooth" })
-        }
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-primary transition-colors animate-bounce"
-      >
-        <ChevronDown className="w-6 h-6" />
-      </button>
-    </section>
-
-    {/* ─── What I Build ─── */}
-    <section id="what-i-build" className="py-24 md:py-32 relative">
-      <div className="absolute inset-0 bg-gradient-section" />
-      <div className="container mx-auto px-6 relative">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-sm font-display text-primary tracking-widest uppercase mb-2">
-              What I Build
-            </p>
-            <h2 className="text-3xl md:text-4xl font-display font-bold">
-              Digital Platforms That Help Businesses{" "}
-              <span className="text-gradient">Launch, Operate & Grow</span>
+      {/* ─── ABOUT ─── */}
+      <section id="about" className="py-24 border-t border-border">
+        <div className="max-w-[1100px] mx-auto px-6 grid lg:grid-cols-5 gap-12">
+          <div className="lg:col-span-3 space-y-6">
+            <p className="section-eyebrow">About</p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+              The engineer behind the work.
             </h2>
-          </div>
+            <div className="space-y-5 text-muted-foreground leading-relaxed text-[15px]">
+              <p>
+                I started in economics, which means I think in systems —
+                incentives, constraints, tradeoffs, and outcomes. When I
+                discovered software engineering, I realised the problems were
+                the same but the tools were more powerful. I've since built
+                backend architectures, authentication services, and full-stack
+                platforms for real clients and real users. I founded PinessTech
+                to build products and teach engineers how systems actually work
+                — not just how to use frameworks.
+              </p>
+              <p>
+                Outside of client work, I run PinessTech — a small studio where
+                I build software products and mentor developers on how real
+                systems are designed and maintained. I believe the best
+                engineers understand <em>why</em> something is built a certain
+                way, not just <em>how</em> to build it.
+              </p>
+            </div>
 
-          <div className="space-y-5 text-muted-foreground leading-relaxed max-w-3xl mx-auto mb-14">
-            <p>
-              Through PinessTech Studio, I design and build digital platforms
-              that help businesses launch, operate, and grow online with
-              confidence.
-            </p>
-            <p>
-              But building software isn't just about writing code. It's about
-              understanding what a business actually needs from its technology
-              — speed, reliability, security, and the ability to grow without
-              breaking the system.
-            </p>
-            <p>
-              Every product I build is engineered with a strong focus on clean
-              architecture, performance, scalability, and long-term
-              maintainability — so the platform doesn't just launch
-              successfully, it continues to support the business as it grows.
-            </p>
-          </div>
+            {/* Tech strip */}
+            <div className="pt-4 flex flex-wrap gap-2">
+              {[
+                "Python",
+                "TypeScript",
+                "React",
+                "FastAPI",
+                "Supabase",
+                "PostgreSQL",
+                "MySQL",
+              ].map((t) => (
+                <span key={t} className="tech-pill">{t}</span>
+              ))}
+            </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {serviceSummary.map((s) => (
-              <div
-                key={s.title}
-                className="group glass glass-hover rounded-xl p-5 space-y-3"
+            <div className="pt-4">
+              <button
+                onClick={() =>
+                  document
+                    .getElementById("projects")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+                className="text-sm font-mono text-primary hover:text-primary/80 inline-flex items-center gap-1.5"
               >
-                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                  <s.icon className="w-4 h-4" />
-                </div>
-                <h3 className="font-display text-sm font-semibold text-foreground">
-                  {s.title}
-                </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {s.desc}
-                </p>
-              </div>
-            ))}
+                → See what I've built
+              </button>
+            </div>
           </div>
 
-          <div className="text-center mt-10">
-            <Button variant="outline" asChild className="font-display gap-2">
-              <Link to="/services">
-                Explore All Services
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </Button>
-          </div>
+          {/* Quick facts */}
+          <aside className="lg:col-span-2">
+            <div className="rounded-lg border border-border bg-card p-6">
+              <p className="section-eyebrow mb-4">quick facts</p>
+              <dl className="space-y-3 text-sm">
+                {quickFacts.map((f) => (
+                  <div
+                    key={f.k}
+                    className="flex justify-between gap-4 py-2 border-b border-border/60 last:border-0"
+                  >
+                    <dt className="text-muted-foreground font-mono text-xs uppercase tracking-wider">
+                      {f.k}
+                    </dt>
+                    <dd className="text-foreground text-right">{f.v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </aside>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* ─── Featured Projects ─── */}
-    <section className="py-24 md:py-32 relative">
-      <div className="container mx-auto px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-sm font-display text-primary tracking-widest uppercase mb-2">
-              Featured Work
-            </p>
-            <h2 className="text-3xl md:text-4xl font-display font-bold">
-              Engineering Stories
+      {/* ─── PROJECTS ─── */}
+      <section id="projects" className="py-24 border-t border-border">
+        <div className="max-w-[1100px] mx-auto px-6">
+          <div className="mb-12">
+            <p className="section-eyebrow">Selected Work</p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mt-2">
+              Production systems, real clients, real outcomes.
             </h2>
-            <p className="text-muted-foreground mt-3 max-w-lg mx-auto">
-              Real projects, real problems, real engineering.
-            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {featuredProjects.map((p) => (
-              <div
+          <div className="grid md:grid-cols-2 gap-5">
+            {projects.map((p) => (
+              <article
                 key={p.title}
-                className="group glass glass-hover rounded-xl p-6 space-y-4"
+                className="group rounded-lg border border-border bg-card p-6 flex flex-col gap-4 transition-colors hover:border-primary/60"
               >
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                  <p.icon className="w-5 h-5" />
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+                    {p.tag}
+                  </p>
+                  {p.liveBadge && (
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-[hsl(var(--success))] border border-[hsl(var(--success))]/40 rounded-full px-2 py-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--success))] animate-pulse" />
+                      Live
+                    </span>
+                  )}
                 </div>
-                <h3 className="font-display text-lg font-semibold text-foreground">
+                <h3 className="text-xl font-semibold tracking-tight">
                   {p.title}
                 </h3>
-                <p className="text-xs font-display text-primary">{p.subtitle}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {p.description}
                 </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {p.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium"
+                {p.note && (
+                  <p className="text-xs text-muted-foreground/80 italic">
+                    {p.note}
+                  </p>
+                )}
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {p.stack.map((s) => (
+                    <span key={s} className="tech-pill">{s}</span>
+                  ))}
+                </div>
+                <div className="flex flex-wrap items-center gap-4 pt-3 mt-auto border-t border-border/60">
+                  {p.live && (
+                    <a
+                      href={p.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80"
                     >
-                      {t}
-                    </span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      Live site
+                    </a>
+                  )}
+                  {p.repo && (
+                    <a
+                      href={p.repo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+                    >
+                      <Github className="w-3.5 h-3.5" />
+                      Source
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SKILLS ─── */}
+      <section id="skills" className="py-24 border-t border-border">
+        <div className="max-w-[1100px] mx-auto px-6">
+          <div className="mb-10">
+            <p className="section-eyebrow">Technical Skills</p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mt-2">
+              What I build with — grouped by role, not alphabet.
+            </h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {skillGroups.map((g) => (
+              <div
+                key={g.label}
+                className="rounded-lg border border-border bg-card p-5"
+              >
+                <p className="text-[11px] font-mono uppercase tracking-wider text-primary mb-3">
+                  {g.label}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {g.items.map((s) => (
+                    <span key={s} className="tech-pill">{s}</span>
                   ))}
                 </div>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-10">
-            <Button asChild className="font-display gap-2 group">
-              <Link to="/projects">
-                View All Projects
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
+      {/* ─── PINESSTECH ─── */}
+      <section id="pinesstech" className="py-24 border-t border-border">
+        <div className="max-w-[1100px] mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-5">
+            <p className="section-eyebrow">The Studio</p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+              PinessTech — software products & engineering mentorship.
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              PinessTech is a small software engineering studio I founded to
+              build digital products and teach developers how real systems
+              work. We design backend architectures, ship full-stack platforms,
+              and break down the engineering behind them — so the next
+              generation of builders understands the <em>why</em>, not just
+              the <em>how</em>.
+            </p>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Button
+                onClick={() =>
+                  document
+                    .getElementById("contact")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+              >
+                Work with the studio
+              </Button>
+              <a
+                href="https://chat.whatsapp.com/L8k7rTVTky66Bzev3KjVK0?mode=gi_t"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-4 h-10 rounded-md border border-border text-sm hover:border-primary hover:text-primary transition-colors"
+              >
+                Join the community ↗
+              </a>
+            </div>
+          </div>
+
+          <div className="flex justify-center lg:justify-end">
+            <div className="rounded-lg border border-border bg-card p-10 w-full max-w-sm text-center">
+              <div className="font-mono text-4xl font-bold tracking-tight">
+                <span className="text-primary">Piness</span>
+                <span className="text-foreground">Tech</span>
+              </div>
+              <p className="text-xs font-mono uppercase tracking-[0.3em] text-muted-foreground mt-3">
+                build · ship · teach
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* ─── Mentorship Preview ─── */}
-    <section className="py-24 md:py-32 relative">
-      <div className="absolute inset-0 bg-gradient-section" />
-      <div className="container mx-auto px-6 relative">
-        <div className="max-w-3xl mx-auto text-center space-y-6">
-          <p className="text-sm font-display text-primary tracking-widest uppercase">
-            Learn & Grow
-          </p>
-          <h2 className="text-3xl md:text-4xl font-display font-bold">
-            Mentorship & Engineering Insights
-          </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            PinessTech Studio isn't just about building — it's about helping
-            people understand the technology they use every day. I share
-            engineering insights, break down real systems, and mentor aspiring
-            developers through practical lessons.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button
-              size="lg"
-              onClick={() =>
-                window.open(
-                  "https://youtube.com/@pinesstech?si=rpPNoK21VqtXP2rB",
-                  "_blank"
-                )
-              }
-              className="font-display text-base gap-2"
+      {/* ─── CONTACT ─── */}
+      <section id="contact" className="py-24 border-t border-border">
+        <div className="max-w-[1100px] mx-auto px-6">
+          <div className="mb-10">
+            <p className="section-eyebrow">Contact</p>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mt-2">
+              Let's build something.
+            </h2>
+            <p className="text-muted-foreground mt-3">
+              Open to freelance projects, contract work, and full-time roles.
+              Response time: within 24 hours.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Form */}
+            <form
+              action="mailto:hello@pinesstech.com"
+              method="post"
+              encType="text/plain"
+              className="rounded-lg border border-border bg-card p-6 space-y-4"
             >
-              <Youtube className="w-5 h-5" />
-              Follow on YouTube
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() =>
-                window.open(
-                  "https://chat.whatsapp.com/L8k7rTVTky66Bzev3KjVK0?mode=gi_t",
-                  "_blank"
-                )
-              }
-              className="font-display text-base gap-2"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Join the Community
-            </Button>
-            <Button variant="outline" size="lg" asChild className="font-display text-base gap-2">
-              <Link to="/mentorship">
-                Learn More
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-    </section>
+              <div>
+                <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+                  Name
+                </label>
+                <input
+                  required
+                  name="name"
+                  className="mt-1 w-full bg-background border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+                  Email
+                </label>
+                <input
+                  required
+                  type="email"
+                  name="email"
+                  className="mt-1 w-full bg-background border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
+                  What are you building?
+                </label>
+                <textarea
+                  required
+                  name="message"
+                  rows={5}
+                  className="mt-1 w-full bg-background border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:border-primary resize-none"
+                />
+              </div>
+              <Button type="submit" className="w-full sm:w-auto">
+                Send Message
+              </Button>
+            </form>
 
-    {/* ─── Final CTA ─── */}
-    <section className="py-24 md:py-32 relative">
-      <div className="container mx-auto px-6">
-        <div className="max-w-3xl mx-auto text-center space-y-8">
-          <h2 className="text-3xl md:text-5xl font-display font-bold leading-tight">
-            Ready to build something{" "}
-            <span className="text-gradient">that actually works?</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            If you're building a startup, business platform, or digital product
-            and want it engineered properly — not just thrown together —
-            PinessTech Studio can help you build it.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild className="font-display text-base gap-2 group">
-              <Link to="/contact">
-                Start a Project
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild className="font-display text-base gap-2">
-              <Link to="/contact">Discuss Your Idea</Link>
-            </Button>
+            {/* Direct contact */}
+            <div className="space-y-6">
+              <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+                <p className="text-[11px] font-mono uppercase tracking-wider text-primary">
+                  Direct
+                </p>
+                <a
+                  href="mailto:adamhappinessjw@gmail.com"
+                  className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                >
+                  <Mail className="w-4 h-4 text-muted-foreground" />
+                  adamhappinessjw@gmail.com
+                </a>
+                <a
+                  href="https://github.com/Pinness"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                >
+                  <Github className="w-4 h-4 text-muted-foreground" />
+                  github.com/Pinness
+                </a>
+                <a
+                  href="https://x.com/LadyPiness"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                >
+                  <Twitter className="w-4 h-4 text-muted-foreground" />
+                  @LadyPiness
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/pinessjw-adam"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                >
+                  <Linkedin className="w-4 h-4 text-muted-foreground" />
+                  linkedin.com/in/pinessjw-adam
+                </a>
+              </div>
+
+              <div className="rounded-lg border border-[hsl(var(--success))]/40 bg-[hsl(var(--success))]/5 p-5 flex items-start gap-3">
+                <span className="w-2 h-2 rounded-full bg-[hsl(var(--success))] mt-1.5 animate-pulse" />
+                <div className="text-sm">
+                  <p className="font-medium text-foreground">
+                    Currently available
+                  </p>
+                  <p className="text-muted-foreground mt-1 text-xs leading-relaxed">
+                    Taking on new freelance and contract work for Q1.
+                    Full-time opportunities also welcome.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  </PageLayout>
-);
+      </section>
+    </PageLayout>
+  );
+};
 
 export default Home;
