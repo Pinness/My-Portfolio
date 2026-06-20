@@ -562,6 +562,15 @@ const Home = () => {
                   <Linkedin className="w-4 h-4 text-muted-foreground" />
                   linkedin.com/in/pinessjw-adam
                 </a>
+                <a
+                  href="https://wa.me/2348104947058"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                >
+                  <WhatsAppIcon className="w-4 h-4" color="#25D366" />
+                  Chat on WhatsApp
+                </a>
               </div>
 
               <div className="rounded-lg border border-[hsl(var(--success))]/40 bg-[hsl(var(--success))]/5 p-5 flex items-start gap-3">
