@@ -186,7 +186,7 @@ const Home = () => {
                 }
                 className="gap-2 group"
               >
-                See selected work
+                View my work
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Button>
               <Button
