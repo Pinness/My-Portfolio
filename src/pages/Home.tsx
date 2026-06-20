@@ -232,8 +232,17 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Right: terminal */}
-          <div className="flex justify-center lg:justify-end">
+          {/* Right: profile + terminal */}
+          <div className="flex flex-col items-center lg:items-end gap-6">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full bg-primary/30 blur-2xl" aria-hidden="true" />
+              <img
+                src={profileImage}
+                alt="Happiness Adam — Full-Stack Software Engineer"
+                loading="eager"
+                className="relative w-40 h-40 lg:w-[280px] lg:h-[280px] rounded-full object-cover ring-2 ring-primary/70 ring-offset-4 ring-offset-background shadow-xl"
+              />
+            </div>
             <TerminalCard />
           </div>
         </div>
@@ -243,76 +252,58 @@ const Home = () => {
       <section id="about" className="py-24 border-t border-border">
         <div className="max-w-[1100px] mx-auto px-6 grid lg:grid-cols-5 gap-12">
           <div className="lg:col-span-3 space-y-6">
-            <p className="section-eyebrow">About</p>
+            <p className="section-eyebrow">ABOUT ME</p>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-              The engineer behind the work.
+              The Engineer Behind the Work.
             </h2>
-            <div className="space-y-5 text-muted-foreground leading-relaxed text-[15px]">
+            <div className="space-y-6 text-muted-foreground text-base" style={{ lineHeight: 1.7 }}>
               <p>
-                I started in economics, which means I think in systems —
-                incentives, constraints, tradeoffs, and outcomes. When I
-                discovered software engineering, I realised the problems were
-                the same but the tools were more powerful. I've since built
-                backend architectures, authentication services, and full-stack
-                platforms for real clients and real users. I founded PinessTech
-                to build products and teach engineers how systems actually work
-                — not just how to use frameworks.
+                My career began with a BSc in Economics, where I developed strong
+                analytical thinking, problem-solving ability, and the skill to
+                break down complex ideas into clear, structured insights.
               </p>
               <p>
-                Outside of client work, I run PinessTech — a small studio where
-                I build software products and mentor developers on how real
-                systems are designed and maintained. I believe the best
-                engineers understand <em>why</em> something is built a certain
-                way, not just <em>how</em> to build it.
+                My curiosity in tech eventually led me into Software Engineering,
+                where I began applying that same analytical thinking and
+                data-driven approach to designing and building real software
+                products. I've since built backend systems, login and security
+                features, and full web applications for real clients and users.
               </p>
-            </div>
-
-            {/* Tech strip */}
-            <div className="pt-4 flex flex-wrap gap-2">
-              {[
-                "Python",
-                "TypeScript",
-                "React",
-                "FastAPI",
-                "Supabase",
-                "PostgreSQL",
-                "MySQL",
-              ].map((t) => (
-                <span key={t} className="tech-pill">{t}</span>
-              ))}
-            </div>
-
-            <div className="pt-4">
-              <button
-                onClick={() =>
-                  document
-                    .getElementById("projects")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="text-sm font-mono text-primary hover:text-primary/80 inline-flex items-center gap-1.5"
-              >
-                → See what I've built
-              </button>
+              <p>
+                I founded PinessTech to build practical software products and
+                help engineers understand the systems behind the tools they use.
+              </p>
             </div>
           </div>
 
           {/* Quick facts */}
-          <aside className="lg:col-span-2">
+          <aside className="lg:col-span-2 space-y-5">
             <div className="rounded-lg border border-border bg-card p-6">
               <p className="section-eyebrow mb-4">quick facts</p>
-              <dl className="space-y-3 text-sm">
+              <ul className="space-y-3 text-sm text-muted-foreground">
                 {quickFacts.map((f) => (
-                  <div
-                    key={f.k}
-                    className="flex justify-between gap-4 py-2 border-b border-border/60 last:border-0"
-                  >
-                    <dt className="text-muted-foreground font-mono text-xs uppercase tracking-wider">
-                      {f.k}
-                    </dt>
-                    <dd className="text-foreground text-right">{f.v}</dd>
-                  </div>
+                  <li key={f.text} className="flex items-start gap-3 leading-relaxed">
+                    <span aria-hidden="true" className="text-base leading-none mt-0.5">
+                      {f.icon}
+                    </span>
+                    <span>{f.text}</span>
+                  </li>
                 ))}
-              </dl>
+              </ul>
+              <div className="mt-5 pt-4 border-t border-border/60">
+                <a
+                  href="#projects"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document
+                      .getElementById("projects")
+                      ?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="text-sm font-mono text-primary no-underline hover:underline inline-flex items-center"
+                >
+                  → View my projects
+                </a>
+              </div>
             </div>
           </aside>
         </div>
@@ -322,11 +313,12 @@ const Home = () => {
       <section id="projects" className="py-24 border-t border-border">
         <div className="max-w-[1100px] mx-auto px-6">
           <div className="mb-12">
-            <p className="section-eyebrow">Selected Work</p>
+            <p className="section-eyebrow">Projects</p>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mt-2">
-              Production systems, real clients, real outcomes.
+              Production systems built for real clients and real users.
             </h2>
           </div>
+
 
           <div className="grid md:grid-cols-2 gap-5">
             {projects.map((p) => (
