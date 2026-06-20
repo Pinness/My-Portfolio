@@ -129,12 +129,12 @@ const skillGroups = [
 ];
 
 const quickFacts = [
-  { k: "Role", v: "Full-Stack Software Engineer" },
-  { k: "Studio", v: "Founder, PinessTech" },
-  { k: "Background", v: "Economics → Software Engineering" },
-  { k: "Focus", v: "Backend systems & web platforms" },
-  { k: "Availability", v: "Freelance · Contract · Full-time" },
-  { k: "Based in", v: "Nigeria · Remote-first" },
+  { icon: "🎓", text: "BSc Economics → Software Engineering" },
+  { icon: "🏢", text: "Founder, PinessTech Studio" },
+  { icon: "🌍", text: "Nigeria · Remote-First" },
+  { icon: "🔧", text: "Backend-Focused · Full-Stack Capable" },
+  { icon: "📦", text: "5 Production Projects Shipped" },
+  { icon: "🤝", text: "Available for Freelance & Contract" },
 ];
 
 /* ─────────────────────────  PAGE  ───────────────────────── */
