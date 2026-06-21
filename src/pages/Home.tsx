@@ -32,7 +32,7 @@ const projects = [
     tag: "Full-Stack · NGO Client · Live",
     title: "Eagle's Wings Empowerment Platform",
     description:
-      "Production platform for a cross-border humanitarian organization operating between Nigeria and Europe. Architected the complete backend from scratch on a stateless frontend — a 24-table headless CMS schema, 8 Supabase Edge Functions, role-based access control across 3 permission levels, and a Paystack donation pipeline. Zero custom server — all backend logic runs serverless.",
+      "Production platform for a humanitarian organization operating between Nigeria and Europe. I built a serverless backend with a structured CMS, role-based access control, and a Paystack donation system, all connected to a stateless frontend.",
     stack: [
       "React 19",
       "TypeScript",
@@ -44,7 +44,7 @@ const projects = [
       "Paystack",
       "Vercel",
     ],
-    live: "https://eagleswing.vercel.app",
+    live: "https://eagleswingsbridgecms.vercel.app/",
     repo: "https://github.com/Pinness/eagle-s-wings-bridge",
     liveBadge: true,
   },
@@ -68,12 +68,14 @@ const projects = [
     note: "Async-first architecture · Swagger UI docs included · Production security practices",
   },
   {
-    tag: "Frontend · Commercial Client",
+    tag: "Frontend · Commercial Client · Live",
     title: "Dexgen Electricals — Business Web Platform",
     description:
-      "Commercial website for an electrical services business. Designed and built the complete frontend to establish the company's digital presence, communicate services clearly, and convert visitors to leads. A real client deliverable — not a demo project.",
+      "A commercial website I built for an electrical services company to establish a strong digital presence, clearly communicate services, and convert visitors into qualified leads. The platform was designed and developed end-to-end with a focus on performance, usability, and conversion-driven UI/UX.",
     stack: ["HTML", "CSS", "JavaScript", "Responsive Design"],
+    live: "https://www.dexgenengineering.com/",
     repo: "https://github.com/Pinness/DexgenElectricals_frontend",
+    liveBadge: true,
     note: "Client deployment",
   },
   {
@@ -133,7 +135,7 @@ const quickFacts = [
   { icon: "🏢", text: "Founder, PinessTech Studio" },
   { icon: "🌍", text: "Nigeria · Remote-First" },
   { icon: "🔧", text: "Backend-Focused · Full-Stack Capable" },
-  { icon: "📦", text: "5 Production Projects Shipped" },
+  { icon: "📦", text: "Production Projects Shipped" },
   { icon: "🤝", text: "Available for Freelance & Contract" },
 ];
 
@@ -167,14 +169,12 @@ const Home = () => {
               Happiness Adam
             </h1>
             <p className="text-lg sm:text-xl text-foreground/90 font-medium">
-              Full-Stack Software Engineer{" "}
-              <span className="text-muted-foreground">&</span> Backend Systems
-              Builder
+              Full-Stack Software Engineer
             </p>
             <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
-              I build production-grade systems — not just websites. Backend
-              architectures, authentication services, and full-stack platforms
-              for real organizations and real users.
+              I design and build software products for real organizations and
+              real users, with a focus on reliability, security, and long-term
+              maintainability.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <Button
@@ -389,7 +389,7 @@ const Home = () => {
           <div className="mb-10">
             <p className="section-eyebrow">Technical Skills</p>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mt-2">
-              What I build with — grouped by role, not alphabet.
+              A practical toolkit built through client work, product development, and continuous learning.
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -421,12 +421,13 @@ const Home = () => {
               PinessTech — software products & engineering mentorship.
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              PinessTech is a small software engineering studio I founded to
-              build digital products and teach developers how real systems
-              work. We design backend architectures, ship full-stack platforms,
-              and break down the engineering behind them — so the next
-              generation of builders understands the <em>why</em>, not just
-              the <em>how</em>.
+              PinessTech is a software engineering studio I founded to build
+              practical digital products and help developers grow into
+              thoughtful engineers. Through client projects, product
+              development, and mentorship, we focus on sharing the principles
+              behind good software so developers understand not just how to
+              build, but how to think, solve problems, and make better
+              engineering decisions.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <Button
@@ -580,8 +581,9 @@ const Home = () => {
                     Currently available
                   </p>
                   <p className="text-muted-foreground mt-1 text-xs leading-relaxed">
-                    Taking on new freelance and contract work for Q1.
-                    Full-time opportunities also welcome.
+                    Available for freelance and contract work building web
+                    applications, backend systems, and full-stack products for
+                    startups, organizations, and businesses.
                   </p>
                 </div>
               </div>
