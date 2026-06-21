@@ -172,9 +172,9 @@ const Home = () => {
               Full-Stack Software Engineer
             </p>
             <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
-              I specialize in building business websites, customer web apps,
-              admin tools, payment systems, authentication flows, and backend
-              services that power how applications work behind the scenes.
+              I design and build software products for real organizations and
+              real users, with a focus on reliability, security, and long-term
+              maintainability.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <Button
