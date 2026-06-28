@@ -173,7 +173,7 @@ const Home = () => {
             </p>
             <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
               I specialize in building business websites, customer web apps,
-              admin tools, payment systems, authentication flows, and backend
+              admin tools, payment systems, login systems, and backend
               services that power how applications work behind the scenes.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
@@ -389,7 +389,7 @@ const Home = () => {
           <div className="mb-10">
             <p className="section-eyebrow">Technical Skills</p>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mt-2">
-              A practical toolkit built through client work, product development, and continuous learning.
+              My toolkit built through client work, product development, and continuous learning.
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
