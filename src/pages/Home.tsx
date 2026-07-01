@@ -473,7 +473,7 @@ const Home = () => {
               Let's build something.
             </h2>
             <p className="text-muted-foreground mt-3">
-              Open to freelance projects, contract work, and full-time roles.
+              Open to freelance projects and contract work.
               Response time: within 24 hours.
             </p>
           </div>
